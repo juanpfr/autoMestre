@@ -33,7 +33,7 @@
             this.txtCliente = new System.Windows.Forms.TextBox();
             this.btnAgendar = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnEditar = new System.Windows.Forms.Button();
             this.pctEmail = new System.Windows.Forms.PictureBox();
             this.btnSair = new System.Windows.Forms.Button();
             this.lblCliente = new System.Windows.Forms.Label();
@@ -61,7 +61,7 @@
             this.pnlMenu.Controls.Add(this.txtCliente);
             this.pnlMenu.Controls.Add(this.btnAgendar);
             this.pnlMenu.Controls.Add(this.button3);
-            this.pnlMenu.Controls.Add(this.button2);
+            this.pnlMenu.Controls.Add(this.btnEditar);
             this.pnlMenu.Controls.Add(this.pctEmail);
             this.pnlMenu.Controls.Add(this.btnSair);
             this.pnlMenu.Controls.Add(this.lblCliente);
@@ -89,6 +89,7 @@
             this.txtCliente.Name = "txtCliente";
             this.txtCliente.Size = new System.Drawing.Size(392, 13);
             this.txtCliente.TabIndex = 24;
+            this.txtCliente.TextChanged += new System.EventHandler(this.txtCliente_TextChanged);
             // 
             // btnAgendar
             // 
@@ -105,6 +106,7 @@
             this.btnAgendar.Text = "AGENDAR";
             this.btnAgendar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAgendar.UseVisualStyleBackColor = false;
+            this.btnAgendar.Click += new System.EventHandler(this.btnAgendar_Click);
             // 
             // button3
             // 
@@ -119,18 +121,19 @@
             this.button3.Text = "CANCELAR";
             this.button3.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // btnEditar
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(133)))), ((int)(((byte)(29)))));
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(761, 67);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(201, 34);
-            this.button2.TabIndex = 17;
-            this.button2.Text = "EDITAR";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnEditar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(133)))), ((int)(((byte)(29)))));
+            this.btnEditar.FlatAppearance.BorderSize = 0;
+            this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditar.Location = new System.Drawing.Point(761, 67);
+            this.btnEditar.Name = "btnEditar";
+            this.btnEditar.Size = new System.Drawing.Size(201, 34);
+            this.btnEditar.TabIndex = 17;
+            this.btnEditar.Text = "EDITAR";
+            this.btnEditar.UseVisualStyleBackColor = false;
+            this.btnEditar.Click += new System.EventHandler(this.button2_Click);
             // 
             // pctEmail
             // 
@@ -175,6 +178,8 @@
             this.dgvAgenda.Name = "dgvAgenda";
             this.dgvAgenda.Size = new System.Drawing.Size(530, 415);
             this.dgvAgenda.TabIndex = 11;
+            this.dgvAgenda.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAgenda_CellClick);
+            this.dgvAgenda.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAgenda_ColumnHeaderMouseClick);
             // 
             // lblHora
             // 
@@ -371,7 +376,7 @@
         private System.Windows.Forms.Label lblData;
         private System.Windows.Forms.Label lblCliente;
         private System.Windows.Forms.Button btnSair;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.PictureBox pctEmail;
         private System.Windows.Forms.Button btnAgendar;
         private System.Windows.Forms.Button button3;

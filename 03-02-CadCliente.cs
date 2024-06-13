@@ -1,12 +1,17 @@
 ﻿using MySql.Data.MySqlClient;
 using Mysqlx.Crud;
+using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +23,55 @@ namespace autoMestreJuan
         {
             InitializeComponent();
         }
+
+        //MÉTODOS PARA FOTOS FTP
+
+        /*VALIDAÇÃO FTP*/
+
+        private bool ValidarFTP()
+        {
+            if(string.IsNullOrEmpty(variaveis.enderecoServidorFtp) || string.IsNullOrEmpty(variaveis.usuarioFtp) || string.IsNullOrEmpty(variaveis.senhaFtp))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        /*CONVERTER A IMAGEM EM BYTE*/
+
+        public byte[] GetImgToByte(string caminhoArquivoFtp)
+        {
+            WebClient ftpCliente = new WebClient();
+            ftpCliente.Credentials = new NetworkCredential(variaveis.usuarioFtp, variaveis.senhaFtp);
+            try
+            {
+
+                byte[] imageToByte = ftpCliente.DownloadData(caminhoArquivoFtp);
+                return imageToByte;
+            }
+            catch
+            {
+
+                byte[] imageToByte = ftpCliente.DownloadData("ftp://127.0.0.1/admin/img/cliente/semimagem.png");
+                return imageToByte;
+            }
+        }
+
+        /*CONVERTER A IMAGEM DE BYTE PARA IMAGEM*/
+
+        public static Bitmap ByteToImage(byte[] blob)
+        {
+            MemoryStream mStream = new MemoryStream();
+            byte[] pData = blob;
+            mStream.Write(pData, 0, Convert.ToInt32(pData.Length));
+            Bitmap bm = new Bitmap(mStream, false);
+            mStream.Dispose();
+            return bm;
+        }
+
 
         //------------------------INICIO MÉTODOS----------------------
 
@@ -43,6 +97,22 @@ namespace autoMestreJuan
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("Cliente cadastrado com sucesso.", "CADASTRO DE CLIENTE");
                 banco.Desconectar();
+
+                if (ValidarFTP())
+                {
+                    if (!string.IsNullOrEmpty(variaveis.fotoCliente))
+                    {
+                        string urlEnviarArquivo = variaveis.enderecoServidorFtp + "img/cliente/" + Path.GetFileName(variaveis.fotoCliente);
+                        try
+                        {
+                            ftp.EnviarArquivoFtp(variaveis.caminhoFotoCliente, urlEnviarArquivo, variaveis.usuarioFtp, variaveis.senhaFtp);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Foto não foi selecionada ou existente no servidor.", "FOTO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
             }
             catch(Exception erro)
             {
@@ -67,7 +137,7 @@ namespace autoMestreJuan
                     variaveis.emailCliente = dr.GetString(4);
                     variaveis.senhaCliente = dr.GetString(5);
                     variaveis.fotoCliente = dr.GetString(6);
-                    variaveis.fotoCliente = variaveis.fotoCliente.Remove(0, 8); //a partir da posição 0, remover 8 caracteres
+                    variaveis.fotoCliente = variaveis.fotoCliente.Remove(0, 8); //a partir da posição 0, remover 8 caracteres (remove "cliente/")
                     variaveis.altCliente = dr.GetString(7);
                     variaveis.statusCliente = dr.GetString(8);
                     variaveis.dataCadCliente = dr.GetDateTime(9);
@@ -77,7 +147,7 @@ namespace autoMestreJuan
                     txtTelefone.Text = variaveis.telefoneCliente;
                     txtEmail.Text = variaveis.emailCliente;
                     txtSenha.Text = variaveis.senhaCliente;
-                    MessageBox.Show(variaveis.fotoCliente);
+                    pctFoto.Image = ByteToImage(GetImgToByte(variaveis.enderecoServidorFtp + "img/cliente/" + variaveis.fotoCliente));
                     cmbStatus.Text = variaveis.statusCliente;
                 }
                 banco.Desconectar();
@@ -87,6 +157,7 @@ namespace autoMestreJuan
                 MessageBox.Show("Erro ao carregar dados do cliente.\n\n" + erro);
             }
         }
+
 
         private void AlterarCliente()
         {
@@ -114,6 +185,45 @@ namespace autoMestreJuan
             catch (Exception erro)
             {
                 MessageBox.Show("Erro ao alterar cliente.\n\n" + erro);
+            }
+        }
+
+        private void AlterarFotoCliente()
+        {
+            try
+            {
+                banco.Conectar();
+                string alterar = "update tbl_cliente set fotoCliente = @foto where idCLiente = @codigo;";
+                MySqlCommand cmd = new MySqlCommand(alterar, banco.conexao);
+
+                //parametros
+                cmd.Parameters.AddWithValue("@foto", variaveis.fotoCliente);
+                cmd.Parameters.AddWithValue("@codigo", variaveis.codigoCliente);
+                //fim parametros
+
+                cmd.ExecuteNonQuery();
+                banco.Desconectar();
+
+                if (ValidarFTP())
+                {
+                    if (!string.IsNullOrEmpty(variaveis.fotoCliente))
+                    {
+                        string urlEnviarArquivo = variaveis.enderecoServidorFtp + "img/cliente/" + Path.GetFileName(variaveis.fotoCliente);
+                        try
+                        {
+                            ftp.EnviarArquivoFtp(variaveis.caminhoFotoCliente, urlEnviarArquivo, variaveis.usuarioFtp, variaveis.senhaFtp);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Foto não foi selecionada ou existente no servidor.", "FOTO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+
+            catch (Exception erro)
+            {
+                MessageBox.Show("Erro ao alterar a foto do cliente.\n\n" + erro);
             }
         }
 
@@ -194,6 +304,10 @@ namespace autoMestreJuan
                 else if(variaveis.funcao == "ALTERAR")
                 {
                     AlterarCliente();
+                    if(variaveis.atFotoCliente == "S")
+                    {
+                        AlterarFotoCliente();
+                    }
                 }
 
                 MessageBox.Show("Cadastrar");
@@ -217,6 +331,55 @@ namespace autoMestreJuan
         {
             new frmCliente().Show();
             Close();
+        }
+
+        private void pctFoto_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void btnFoto_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofdFoto = new OpenFileDialog();
+                ofdFoto.Multiselect = false;
+                ofdFoto.FileName = "";
+                ofdFoto.InitialDirectory = @"C:";
+                ofdFoto.Title = "SELECIONE UMA FOTO";
+                ofdFoto.Filter = "JPG ou PNG (*.jpg ou (*.png)|*.jpg;*.png";
+                ofdFoto.CheckFileExists = true;
+                ofdFoto.CheckPathExists = true;
+                ofdFoto.RestoreDirectory = true;
+
+                DialogResult result = ofdFoto.ShowDialog();
+                pctFoto.Image = Image.FromFile(ofdFoto.FileName);
+                variaveis.fotoCliente = "cliente/"+Regex.Replace(txtNome.Text,@"\s","").ToLower()+".png";
+
+                if(result == DialogResult.OK)
+                {
+                    try
+                    {
+                        variaveis.atFotoCliente = "S";
+                        variaveis.caminhoFotoCliente = ofdFoto.FileName;
+                    }
+
+                    catch(SecurityException erro)
+                    {
+                        MessageBox.Show("Erro de segurança - Fale com o Admin \n Mensagem: " + erro + "\n Detalhe: " + erro.StackTrace);
+                    }
+
+                    catch (Exception erro)
+                    {
+                        MessageBox.Show("Você não tem permissão. \n Detalhe: " + erro);
+                    }
+                }
+                btnSalvar.Focus();
+            }
+            catch
+            {
+                btnSalvar.Focus();
+            }
         }
     }
 }

@@ -32,7 +32,7 @@
             this.txtTelefone = new System.Windows.Forms.MaskedTextBox();
             this.cmbStatus = new System.Windows.Forms.ComboBox();
             this.btnSair = new System.Windows.Forms.Button();
-            this.btnMais = new System.Windows.Forms.Button();
+            this.btnFoto = new System.Windows.Forms.Button();
             this.lblFoto = new System.Windows.Forms.Label();
             this.pctFoto = new System.Windows.Forms.PictureBox();
             this.lblStatus = new System.Windows.Forms.Label();
@@ -59,7 +59,7 @@
             this.pnlMenu.Controls.Add(this.txtTelefone);
             this.pnlMenu.Controls.Add(this.cmbStatus);
             this.pnlMenu.Controls.Add(this.btnSair);
-            this.pnlMenu.Controls.Add(this.btnMais);
+            this.pnlMenu.Controls.Add(this.btnFoto);
             this.pnlMenu.Controls.Add(this.lblFoto);
             this.pnlMenu.Controls.Add(this.pctFoto);
             this.pnlMenu.Controls.Add(this.lblStatus);
@@ -86,7 +86,7 @@
             this.txtTelefone.Location = new System.Drawing.Point(161, 360);
             this.txtTelefone.Mask = "(99)00000-0000";
             this.txtTelefone.Name = "txtTelefone";
-            this.txtTelefone.Size = new System.Drawing.Size(263, 20);
+            this.txtTelefone.Size = new System.Drawing.Size(92, 20);
             this.txtTelefone.TabIndex = 2;
             // 
             // cmbStatus
@@ -95,9 +95,9 @@
             this.cmbStatus.Items.AddRange(new object[] {
             "ATIVO",
             "INATIVO"});
-            this.cmbStatus.Location = new System.Drawing.Point(443, 359);
+            this.cmbStatus.Location = new System.Drawing.Point(272, 359);
             this.cmbStatus.Name = "cmbStatus";
-            this.cmbStatus.Size = new System.Drawing.Size(417, 21);
+            this.cmbStatus.Size = new System.Drawing.Size(588, 21);
             this.cmbStatus.TabIndex = 3;
             // 
             // btnSair
@@ -114,25 +114,26 @@
             this.btnSair.UseVisualStyleBackColor = false;
             this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
             // 
-            // btnMais
+            // btnFoto
             // 
-            this.btnMais.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(133)))), ((int)(((byte)(29)))));
-            this.btnMais.FlatAppearance.BorderSize = 0;
-            this.btnMais.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMais.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMais.Location = new System.Drawing.Point(1112, 431);
-            this.btnMais.Name = "btnMais";
-            this.btnMais.Size = new System.Drawing.Size(33, 29);
-            this.btnMais.TabIndex = 38;
-            this.btnMais.Text = "+";
-            this.btnMais.UseVisualStyleBackColor = false;
+            this.btnFoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(133)))), ((int)(((byte)(29)))));
+            this.btnFoto.FlatAppearance.BorderSize = 0;
+            this.btnFoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFoto.Location = new System.Drawing.Point(1112, 434);
+            this.btnFoto.Name = "btnFoto";
+            this.btnFoto.Size = new System.Drawing.Size(33, 29);
+            this.btnFoto.TabIndex = 38;
+            this.btnFoto.Text = "+";
+            this.btnFoto.UseVisualStyleBackColor = false;
+            this.btnFoto.Click += new System.EventHandler(this.btnFoto_Click);
             // 
             // lblFoto
             // 
             this.lblFoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(92)))), ((int)(((byte)(41)))));
             this.lblFoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFoto.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(216)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
-            this.lblFoto.Location = new System.Drawing.Point(926, 172);
+            this.lblFoto.Location = new System.Drawing.Point(926, 171);
             this.lblFoto.Name = "lblFoto";
             this.lblFoto.Size = new System.Drawing.Size(219, 55);
             this.lblFoto.TabIndex = 37;
@@ -142,18 +143,20 @@
             // pctFoto
             // 
             this.pctFoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(216)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
-            this.pctFoto.Location = new System.Drawing.Point(926, 222);
+            this.pctFoto.Location = new System.Drawing.Point(926, 226);
             this.pctFoto.Name = "pctFoto";
             this.pctFoto.Size = new System.Drawing.Size(219, 238);
+            this.pctFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pctFoto.TabIndex = 36;
             this.pctFoto.TabStop = false;
+            this.pctFoto.Click += new System.EventHandler(this.pctFoto_Click);
             // 
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(216)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
-            this.lblStatus.Location = new System.Drawing.Point(440, 338);
+            this.lblStatus.Location = new System.Drawing.Point(269, 338);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(72, 18);
             this.lblStatus.TabIndex = 34;
@@ -338,7 +341,7 @@
         private System.Windows.Forms.Label lblSenha;
         private System.Windows.Forms.PictureBox pctFoto;
         private System.Windows.Forms.Label lblFoto;
-        private System.Windows.Forms.Button btnMais;
+        private System.Windows.Forms.Button btnFoto;
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.MaskedTextBox txtTelefone;
         private System.Windows.Forms.ComboBox cmbStatus;
