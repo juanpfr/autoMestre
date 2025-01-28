@@ -16,7 +16,11 @@ namespace autoMestreJuan
 
 
         //para banco de dados online (servidor web (externo))
-        public static string db = "SERVER=teachercamila.smpsistema.com.br;USER=u283879542_ti22_juan;PASSWORD=Senac@ti22;DATABASE=u283879542_ti22_juan;SSL MODE=None";
+        public static string db = "SERVER=test;" +
+            "USER=test;" +
+            "PASSWORD=test;" +
+            "DATABASE=test;" +
+            "SSL MODE=None";
 
         public static MySqlConnection conexao;
 
